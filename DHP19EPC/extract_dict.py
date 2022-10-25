@@ -11,8 +11,8 @@ import os
 import glob
 
 # path of files generated using matlab
-root_dir = 'F://DHP19EPC_dataset//test_MeanLabel//data//'
-out_dir = 'F://DHP19EPC_dataset//test_MeanLabel_extract//'
+root_dir = '/home/yuki/workspace/DHP19EPC_dataset/test_MeanLabel/data/'
+out_dir = '/home/yuki/workspace/DHP19EPC_dataset/test_MeanLabel_extract/'
 
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
@@ -27,9 +27,10 @@ def extract_dict(file_dir):
     Point_List2 = []
     Point_List3 = []
     filename = os.path.basename(file_dir)
-    sub = int(filename[filename.find('S') + len('S'): filename.find('session')].split('_')[0])
-    session = int(filename[filename.find('session') + len('session'): filename.find('mov')].split('_')[0])
-    mov = int(filename[filename.find('mov') + len('mov'): filename.find('h5')].split('.')[0])
+    sub = int(filename[filename.find('S') + len('S')              : filename.find('session')].split('_')[0])
+    session = int(filename[filename.find('session') +
+                  len('session'): filename.find('mov')].split('_')[0])
+    mov = int(filename[filename.find('mov') + len('mov')              : filename.find('h5')].split('.')[0])
 
     pcdata_all = h5py.File(file_dir, 'r')
 
@@ -44,7 +45,8 @@ def extract_dict(file_dir):
         Point_List2.append(PointNum[2])
         Point_List3.append(PointNum[3])
         for cam in range(4):
-            frame_name = "S{}_session{}_mov{}_frame{}_cam{}{}.npy".format(sub, session, mov, frame_num, cam, "")
+            frame_name = "S{}_session{}_mov{}_frame{}_cam{}{}.npy".format(
+                sub, session, mov, frame_num, cam, "")
             Point_Num_Dict[frame_name] = int(PointNum[cam])
 
     pcdata_all.close()
@@ -52,7 +54,8 @@ def extract_dict(file_dir):
     Point_List1 = np.array(Point_List1)[:, np.newaxis]
     Point_List2 = np.array(Point_List2)[:, np.newaxis]
     Point_List3 = np.array(Point_List3)[:, np.newaxis]
-    Point_Num_Dict_PerVideo[filename] = np.concatenate((Point_List0, Point_List1, Point_List2, Point_List3), axis=1)
+    Point_Num_Dict_PerVideo[filename] = np.concatenate(
+        (Point_List0, Point_List1, Point_List2, Point_List3), axis=1)
 
 
 dvs_frames = sorted(glob.glob(os.path.join(root_dir, "*.h5")))

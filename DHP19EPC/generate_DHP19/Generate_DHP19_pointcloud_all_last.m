@@ -12,9 +12,9 @@
 
 % Set the paths of code repository folder, data folder and output folder 
 % where to generate files of accumulated events.
-rootCodeFolder = 'F:\EventPointPose\DHP19EPC'; % root directory of the git repo to this folder.
-rootDataFolder = 'F:\DHP19\'; % root directory of the data downloaded from resiliosync.
-outDatasetFolder = 'F:\DHP19EPC_dataset\train_LastLabel\'; % root directory of generated train data or test data.
+rootCodeFolder = '\\wsl.localhost\Ubuntu\home\yuki\workspace\EventPointPose\DHP19EPC'; % root directory of the git repo to this folder.
+rootDataFolder = 'D:\Resilio\DHP19'; % root directory of the data downloaded from resiliosync.
+outDatasetFolder = '\\wsl.localhost\Ubuntu\home\yuki\workspace\DHP19EPC_dataset'; % root directory of generated train data or test data.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

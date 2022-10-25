@@ -11,24 +11,25 @@ from os.path import join
 import glob
 
 # path of files generated using matlab
-root_dir = 'F://DHP19EPC_dataset//test_LastLabel//label//'
-out_dir = 'F://DHP19EPC_dataset//test_LastLabel_extract//label//'
+root_dir = '/home/yuki/workspace/DHP19EPC_dataset/test_LastLabel/label/'
+out_dir = '/home/yuki/workspace/DHP19EPC_dataset/test_LastLabel_extract/label/'
 
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
 
 # camera projection matrices path
-P_mat_dir = 'F://EventPointPose//P_matrices//'
+P_mat_dir = '/home/yuki/workspace/EventPointPose/P_matrices/'
 
 
 def extract_frames_labels(label_file_dir, out_dir, P_mat_cam_all, image_info):
     image_h, image_w, num_joints = image_info[:]
 
     filename = os.path.basename(label_file_dir)
-    sub = int(filename[filename.find('S') + len('S'): filename.find('session')].split('_')[0])
-    session = int(filename[filename.find('session') + len('session'): filename.find('mov')].split('_')[0])
-    mov = int(filename[filename.find('mov') + len('mov'): filename.find('cam')].split('_')[0])
-    cam = int(filename[filename.find('cam') + len('cam'): filename.find('label')].split('_')[0])
+    sub = int(filename[filename.find('S') + len('S')              : filename.find('session')].split('_')[0])
+    session = int(filename[filename.find('session') +
+                  len('session'): filename.find('mov')].split('_')[0])
+    mov = int(filename[filename.find('mov') + len('mov')              : filename.find('cam')].split('_')[0])
+    cam = int(filename[filename.find('cam') + len('cam')              : filename.find('label')].split('_')[0])
 
     labels_all = h5py.File(label_file_dir, 'r')
 
@@ -38,10 +39,13 @@ def extract_frames_labels(label_file_dir, out_dir, P_mat_cam_all, image_info):
     for frame_num in range(data_len):
         vicon_xyz = vicon_xyz_all[...][frame_num]
         vicon_xyz_homog = np.concatenate([vicon_xyz, np.ones([1, 13])], axis=0)
-        coord_pix_all_cam2_homog = np.matmul(P_mat_cam_all[cam], vicon_xyz_homog)
-        coord_pix_all_cam2_homog_norm = coord_pix_all_cam2_homog / coord_pix_all_cam2_homog[-1]
+        coord_pix_all_cam2_homog = np.matmul(
+            P_mat_cam_all[cam], vicon_xyz_homog)
+        coord_pix_all_cam2_homog_norm = coord_pix_all_cam2_homog / \
+            coord_pix_all_cam2_homog[-1]
         u = coord_pix_all_cam2_homog_norm[0]
-        v = image_h - coord_pix_all_cam2_homog_norm[1]  # flip v coordinate to match the image direction
+        # flip v coordinate to match the image direction
+        v = image_h - coord_pix_all_cam2_homog_norm[1]
 
         # mask is used to make sure that pixel positions are in frame range.
         mask = np.ones(u.shape).astype(np.float32)
@@ -53,7 +57,8 @@ def extract_frames_labels(label_file_dir, out_dir, P_mat_cam_all, image_info):
         # pixel coordinates
         u = u.astype(np.int32)
         v = v.astype(np.int32)
-        label_name = "S{}_session{}_mov{}_cam{}_frame{}_label{}.npy".format(sub, session, mov, cam, frame_num, "")
+        label_name = "S{}_session{}_mov{}_cam{}_frame{}_label{}.npy".format(
+            sub, session, mov, cam, frame_num, "")
 
         out_path = out_dir + label_name
 
